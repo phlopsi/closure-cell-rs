@@ -113,6 +113,16 @@ impl<T: std::Copy> ClosureCell<T> {
     }
 }
 
+impl<T> ClosureCell<T>
+where
+    T: std::Default,
+{
+    /// Takes the value of the cell, leaving `Default::default()` in its place.
+    pub fn take(&self) -> T {
+        self.replace(std::Default::default())
+    }
+}
+
 impl<T> ClosureCell<[T]> {
     /// Returns a `&[ClosureCell<T>]` from a `&ClosureCell<[T]>`
     pub fn as_slice_of_cells(&self) -> &[ClosureCell<T>] {
