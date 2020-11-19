@@ -20,7 +20,7 @@ pub unsafe auto trait ClosureCellSafe {}
 impl<T> !ClosureCellSafe for ClosureCell<T> where T: ?std::Sized {}
 
 impl<T> ClosureCell<T> {
-    /// Creates a new `Cell` containing the given value.
+    /// Creates a new `ClosureCell` containing the given value.
     #[inline]
     pub const fn new(value: T) -> Self {
         Self {
