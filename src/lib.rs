@@ -70,9 +70,26 @@ impl<T> ClosureCell<T>
 where
     T: ?std::Sized,
 {
+    /// Returns a raw pointer to the underlying data in this cell.
+    #[inline]
+    pub const fn as_ptr(&self) -> *mut T {
+        self.value.get()
+    }
+
+    /// Returns a mutable reference to the underlying data.
+    ///
+    /// This call borrows `ClosureCell` mutably (at compile-time) which guarantees
+    /// that we possess the only reference.
     #[inline]
     pub fn get_mut(&mut self) -> &mut T {
         unsafe { &mut *self.value.get() }
+    }
+
+    /// Returns a `&Cell<T>` from a `&mut T`
+    #[inline]
+    pub fn from_mut(ref_mut: &mut T) -> &Self {
+        // SAFETY: `&mut` ensures unique access.
+        unsafe { &*(ref_mut as *mut T as *const Self) }
     }
 }
 
