@@ -20,6 +20,7 @@ pub unsafe auto trait ClosureCellSafe {}
 impl<T> !ClosureCellSafe for ClosureCell<T> where T: ?std::Sized {}
 
 impl<T> ClosureCell<T> {
+    /// Creates a new `Cell` containing the given value.
     #[inline]
     pub const fn new(value: T) -> Self {
         Self {
@@ -27,6 +28,38 @@ impl<T> ClosureCell<T> {
         }
     }
 
+    /// Sets the contained value.
+    #[inline]
+    pub fn set(&self, value: T) {
+        let old = self.replace(value);
+        std::mem::drop(old);
+    }
+
+    /// Swaps the values of two Cells.
+    /// Difference with `std::mem::swap` is that this function doesn't require `&mut` reference.
+    #[inline]
+    pub fn swap(&self, other: &Self) {
+        if std::ptr::eq(self, other) {
+            return;
+        }
+
+        // SAFETY: This can be risky if called from separate threads, but `Cell`
+        // is `!Sync` so this won't happen. This also won't invalidate any
+        // pointers since `ClosureCell` makes sure nothing else will be pointing into
+        // either of these `ClosureCell`s.
+        unsafe {
+            std::ptr::swap(self.value.get(), other.value.get());
+        }
+    }
+
+    /// Replaces the contained value, and returns it.
+    pub fn replace(&self, value: T) -> T {
+        // SAFETY: This can cause data races if called from a separate thread,
+        // but `ClosureCell` is `!Sync` so this won't happen.
+        std::mem::replace(unsafe { &mut *self.value.get() }, value)
+    }
+
+    /// Unwraps the value.
     #[inline]
     pub fn into_inner(self) -> T {
         self.value.into_inner()
