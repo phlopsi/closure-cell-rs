@@ -5,6 +5,9 @@
 
 mod std;
 
+/// A mutable memory location.
+#[derive(Default)]
+#[repr(transparent)]
 pub struct ClosureCell<T>
 where
     T: ?std::Sized,
@@ -21,6 +24,10 @@ impl<T> ClosureCell<T> {
         Self {
             value: std::UnsafeCell::new(value),
         }
+    }
+
+    pub fn into_inner(self) -> T {
+        self.value.into_inner()
     }
 }
 
@@ -39,5 +46,11 @@ where
 {
     pub fn with_inner(&self, f: impl std::FnOnce(&mut T) + ClosureCellSafe) {
         f(unsafe { &mut *self.value.get() });
+    }
+}
+
+impl<T> std::From<T> for ClosureCell<T> {
+    fn from(t: T) -> Self {
+        Self::new(t)
     }
 }
