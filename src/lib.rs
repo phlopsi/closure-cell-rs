@@ -6,6 +6,8 @@
 mod std;
 
 /// A mutable memory location.
+///
+/// Almost all methods have been copied from [`std::cell::Cell`]. The important difference is the addition of [`ClosureCell::with_inner`]. It makes [`std::cell::RefCell`] obsolete for many more cases. `ClosureCell`, like `Cell`, does not require any additional bookkeeping to work.
 #[derive(Default)]
 #[repr(transparent)]
 pub struct ClosureCell<T>

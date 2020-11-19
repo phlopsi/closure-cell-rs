@@ -1,3 +1,5 @@
+pub use ::core::cell;
+pub use ::core::cell::Cell;
 pub use ::core::cell::UnsafeCell;
 pub use ::core::clone::Clone;
 pub use ::core::cmp;
