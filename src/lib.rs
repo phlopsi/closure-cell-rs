@@ -146,3 +146,55 @@ impl<T: std::Copy> std::Clone for ClosureCell<T> {
         Self::new(self.get())
     }
 }
+
+impl<T> std::PartialEq for ClosureCell<T>
+where
+    T: std::PartialEq + std::Copy,
+{
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        self.get() == other.get()
+    }
+}
+
+impl<T> std::Eq for ClosureCell<T> where T: std::Eq + std::Copy {}
+
+impl<T> std::PartialOrd for ClosureCell<T>
+where
+    T: std::PartialOrd + std::Copy,
+{
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> std::Option<std::cmp::Ordering> {
+        self.get().partial_cmp(&other.get())
+    }
+
+    #[inline]
+    fn lt(&self, other: &Self) -> bool {
+        self.get() < other.get()
+    }
+
+    #[inline]
+    fn le(&self, other: &Self) -> bool {
+        self.get() <= other.get()
+    }
+
+    #[inline]
+    fn gt(&self, other: &Self) -> bool {
+        self.get() > other.get()
+    }
+
+    #[inline]
+    fn ge(&self, other: &Self) -> bool {
+        self.get() >= other.get()
+    }
+}
+
+impl<T> std::Ord for ClosureCell<T>
+where
+    T: std::Ord + std::Copy,
+{
+    #[inline]
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.get().cmp(&other.get())
+    }
+}

@@ -1,9 +1,15 @@
 pub use ::core::cell::UnsafeCell;
 pub use ::core::clone::Clone;
+pub use ::core::cmp;
+pub use ::core::cmp::Eq;
+pub use ::core::cmp::Ord;
+pub use ::core::cmp::PartialEq;
+pub use ::core::cmp::PartialOrd;
 pub use ::core::convert::From;
 pub use ::core::default::Default;
 pub use ::core::marker::Copy;
 pub use ::core::marker::Sized;
 pub use ::core::mem;
 pub use ::core::ops::FnOnce;
+pub use ::core::option::Option;
 pub use ::core::ptr;
