@@ -1,3 +1,5 @@
+#![no_implicit_prelude]
+#![no_std]
 #![feature(optin_builtin_traits)]
 #![feature(negative_impls)]
 
@@ -10,7 +12,7 @@ where
     value: std::UnsafeCell<T>,
 }
 
-pub auto trait ClosureCellSafe {}
+pub unsafe auto trait ClosureCellSafe {}
 
 impl<T> !ClosureCellSafe for ClosureCell<T> where T: ?std::Sized {}
 
