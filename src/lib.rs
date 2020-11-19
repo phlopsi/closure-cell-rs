@@ -36,7 +36,7 @@ impl<T> ClosureCell<T> {
     }
 
     /// Swaps the values of two Cells.
-    /// Difference with `std::mem::swap` is that this function doesn't require `&mut` reference.
+    /// Difference with [`std::mem::swap`] is that this function doesn't require `&mut` reference.
     #[inline]
     pub fn swap(&self, other: &Self) {
         if std::ptr::eq(self, other) {
@@ -110,6 +110,16 @@ impl<T: std::Copy> ClosureCell<T> {
         // SAFETY: This can cause data races if called from a separate thread,
         // but `Cell` is `!Sync` so this won't happen.
         unsafe { *self.value.get() }
+    }
+}
+
+impl<T> ClosureCell<[T]> {
+    /// Returns a `&[ClosureCell<T>]` from a `&ClosureCell<[T]>`
+    pub fn as_slice_of_cells(&self) -> &[ClosureCell<T>] {
+        // SAFETY: `ClosureCell<T>` has the same memory layout as `T`.
+        unsafe {
+            &*(self as *const ClosureCell<[T]> as *const [ClosureCell<T>])
+        }
     }
 }
 
