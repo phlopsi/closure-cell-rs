@@ -26,6 +26,15 @@ impl<T> ClosureCell<T> {
 
 impl<T> ClosureCell<T>
 where
+    T: ?std::Sized,
+{
+    pub fn get_mut(&mut self) -> &mut T {
+        unsafe { &mut *self.value.get() }
+    }
+}
+
+impl<T> ClosureCell<T>
+where
     T: ?std::Sized + ClosureCellSafe,
 {
     pub fn with_inner(&self, f: impl std::FnOnce(&mut T) + ClosureCellSafe) {
